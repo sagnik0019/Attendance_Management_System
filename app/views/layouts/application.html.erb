@@ -27,10 +27,12 @@
   </head>
 
   <body>
-    <div class="container-fluid">
-      <%= render partial: "shared/header" %>
+    <%= render partial: "shared/header" %>
+
+    <div class="container">
       <%= yield %>
-      <%= render partial: "shared/footer" %>
     </div>
+
+    <%= render partial: "shared/footer" %>
   </body>
 </html>

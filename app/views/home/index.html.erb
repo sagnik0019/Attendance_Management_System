@@ -1,1 +1,7 @@
-<h1>Welcome to our app</h1>
+<% if teacher_signed_in? %>
+  <h1>Welcome teacher <%= current_teacher.email %></h1>
+<% elsif student_signed_in? %>
+  <h1>Welcome student <%= current_student.email %></h1>
+<% else %>
+  <h1>Welcome to the home page</h1>
+<% end %>
