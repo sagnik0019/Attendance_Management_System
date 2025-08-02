@@ -4,10 +4,10 @@
       <div class="card">
         <div class="card-header bg-primary text-white">
           <div class="d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">Department Details</h2>
+            <h2 class="mb-0">Semester Details</h2>
             <div>
-              <%= link_to 'Back', departments_path, class: 'btn btn-sm btn-outline-light me-2' %>
-              <%= link_to 'Edit', edit_department_path(@department), class: 'btn btn-sm btn-outline-light' %>
+              <%= link_to 'Back', semesters_path, class: 'btn btn-sm btn-outline-light me-2' %>
+              <%= link_to 'Edit', edit_semester_path(@semester), class: 'btn btn-sm btn-outline-light' %>
             </div>
           </div>
         </div>
@@ -15,30 +15,25 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-4 fw-bold">Name:</div>
-            <div class="col-md-8"><%= @department.name %></div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-md-4 fw-bold">Code:</div>
-            <div class="col-md-8"><%= @department.code %></div>
+            <div class="col-md-8"><%= @semester.name %></div>
           </div>
 
           <div class="row mb-3">
             <div class="col-md-4 fw-bold">Created At:</div>
-            <div class="col-md-8"><%= @department.created_at.to_formatted_s(:long) %></div>
+            <div class="col-md-8"><%= @semester.created_at.to_formatted_s(:long) %></div>
           </div>
 
           <div class="row">
             <div class="col-md-4 fw-bold">Updated At:</div>
-            <div class="col-md-8"><%= @department.updated_at.to_formatted_s(:long) %></div>
+            <div class="col-md-8"><%= @semester.updated_at.to_formatted_s(:long) %></div>
           </div>
         </div>
 
         <div class="card-footer bg-light">
           <div class="d-flex justify-content-end">
-            <%= button_to 'Delete', @department,
+            <%= button_to 'Delete', @semester,
                   method: :delete,
-                  data: { confirm: 'Are you sure you want to delete this department?' },
+                  data: { confirm: 'Are you sure you want to delete this semester?' },
                   class: 'btn btn-danger' %>
           </div>
         </div>

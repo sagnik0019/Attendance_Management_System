@@ -1,0 +1,23 @@
+<%= form_with(model: semester, local: true) do |form| %>
+  <% if semester.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(semester.errors.count, "error") %> prohibited this semester from being saved:</h4>
+      <ul>
+        <% semester.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", required: true %>
+    <small class="text-muted">E.g., Fall 2023, Spring 2024</small>
+  </div>
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+    <%= link_to "Back", semesters_path, class: "btn btn-outline-secondary me-md-2" %>
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

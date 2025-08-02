@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
 
   resources :departments
+  resources :semesters
 
   root "home#index"
 end
