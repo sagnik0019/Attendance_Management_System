@@ -10,9 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_02_105812) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_02_143316) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "attendances", force: :cascade do |t|
+    t.bigint "semester_id", null: false
+    t.bigint "subject_id", null: false
+    t.bigint "student_id", null: false
+    t.bigint "teacher_id", null: false
+    t.date "attendance_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["semester_id", "subject_id", "student_id", "teacher_id", "attendance_date"], name: "idx_on_semester_id_subject_id_student_id_teacher_id_271ec6d6dc", unique: true
+    t.index ["semester_id"], name: "index_attendances_on_semester_id"
+    t.index ["student_id"], name: "index_attendances_on_student_id"
+    t.index ["subject_id"], name: "index_attendances_on_subject_id"
+    t.index ["teacher_id"], name: "index_attendances_on_teacher_id"
+  end
 
   create_table "departments", force: :cascade do |t|
     t.string "name", limit: 255, null: false
@@ -69,6 +84,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_105812) do
     t.index ["reset_password_token"], name: "index_teachers_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "attendances", "semesters", on_delete: :nullify
+  add_foreign_key "attendances", "students", on_delete: :nullify
+  add_foreign_key "attendances", "subjects", on_delete: :nullify
+  add_foreign_key "attendances", "teachers", on_delete: :nullify
   add_foreign_key "students", "departments", on_delete: :cascade
   add_foreign_key "students", "semesters", on_delete: :cascade
   add_foreign_key "subjects", "departments", on_delete: :cascade
