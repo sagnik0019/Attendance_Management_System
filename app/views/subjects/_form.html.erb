@@ -1,0 +1,38 @@
+<%= form_with(model: subject, local: true) do |form| %>
+  <% if subject.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(subject.errors.count, "error") %> prohibited this subject from being saved:</h4>
+      <ul>
+        <% subject.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :code, class: "form-label" %>
+    <%= form.text_field :code, class: "form-control", maxlength: 3, required: true %>
+    <small class="text-muted">3-character code</small>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :department_id, "Department", class: "form-label" %>
+    <%= form.select :department_id, @departments.collect { |d| [d.name, d.id] }, { include_blank: true }, class: "form-select", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :semester_id, "Semester", class: "form-label" %>
+    <%= form.select :semester_id, @semesters.collect { |s| [s.name, s.id] }, { include_blank: true }, class: "form-select", required: true %>
+  </div>
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+    <%= link_to "Back", subjects_path, class: "btn btn-outline-secondary me-md-2" %>
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

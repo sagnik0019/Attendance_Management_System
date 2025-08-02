@@ -1,0 +1,59 @@
+<!-- app/views/subjects/show.html.erb -->
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Subject Details</h2>
+            <div>
+              <%= link_to 'Back', subjects_path, class: 'btn btn-sm btn-outline-light me-2' %>
+              <%= link_to 'Edit', edit_subject_path(@subject), class: 'btn btn-sm btn-outline-light' %>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-4 fw-bold">Name:</div>
+            <div class="col-md-8"><%= @subject.name %></div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4 fw-bold">Code:</div>
+            <div class="col-md-8"><%= @subject.code %></div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4 fw-bold">Department:</div>
+            <div class="col-md-8"><%= @subject.department.name %></div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4 fw-bold">Semester:</div>
+            <div class="col-md-8"><%= @subject.semester.name %></div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4 fw-bold">Created At:</div>
+            <div class="col-md-8"><%= @subject.created_at.to_formatted_s(:long) %></div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 fw-bold">Updated At:</div>
+            <div class="col-md-8"><%= @subject.updated_at.to_formatted_s(:long) %></div>
+          </div>
+        </div>
+
+        <div class="card-footer bg-light">
+          <div class="d-flex justify-content-end">
+            <%= button_to 'Delete', @subject,
+                  method: :delete,
+                  data: { confirm: 'Are you sure you want to delete this subject?' },
+                  class: 'btn btn-danger' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   resources :departments
   resources :semesters
+  resources :subjects
 
   root "home#index"
 end
