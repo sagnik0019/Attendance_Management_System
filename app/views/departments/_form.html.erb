@@ -1,0 +1,28 @@
+<%= form_with(model: department, local: true) do |form| %>
+  <% if department.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(department.errors.count, "error") %> prohibited this department from being saved:</h4>
+      <ul>
+        <% department.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :code, class: "form-label" %>
+    <%= form.text_field :code, class: "form-control", maxlength: 2, required: true %>
+    <small class="text-muted">2-character code</small>
+  </div>
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+    <%= link_to "Back", departments_path, class: "btn btn-outline-secondary me-md-2" %>
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

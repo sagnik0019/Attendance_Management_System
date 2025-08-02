@@ -5,3 +5,15 @@
 <% else %>
   <h1>Welcome to the home page</h1>
 <% end %>
+
+
+
+<br>
+<br>
+<br>
+
+
+<% if teacher_signed_in? && current_teacher.admin? %>
+  <%= link_to "Departments", departments_path, class: "btn btn-primary" %>
+  <br>
+<% end %>
