@@ -1,0 +1,171 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h2 class="mb-0">Record Attendance</h2>
+        </div>
+
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <label for="department" class="form-label">Department</label>
+              <select id="department" class="form-select">
+                <option value="">Select Department</option>
+                <% @departments.each do |dept| %>
+                  <option value="<%= dept.id %>"><%= dept.name %></option>
+                <% end %>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label for="semester" class="form-label">Semester</label>
+              <select id="semester" class="form-select">
+                <option value="">Select Semester</option>
+                <% @semesters.each do |sem| %>
+                  <option value="<%= sem.id %>"><%= sem.name %></option>
+                <% end %>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label for="attendance_date" class="form-label">Date</label>
+              <input type="date" id="attendance_date" class="form-control" value="<%= Date.today.strftime('%Y-%m-%d') %>">
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <label for="subject" class="form-label">Subject</label>
+              <select id="subject" class="form-select" disabled>
+                <option value="">Select Subject</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="students-container" class="d-none">
+            <h5>Mark Attendance</h5>
+
+            <%= form_with url: bulk_create_attendances_path, method: :post, id: 'attendance-form' do |f| %>
+              <input type="hidden" name="attendance[subject_id]" id="form-subject-id">
+              <input type="hidden" name="attendance[semester_id]" id="form-semester-id">
+              <input type="hidden" name="attendance[attendance_date]" id="form-attendance-date">
+
+              <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Present</th>
+                      <th>Roll Number</th>
+                      <th>Student Name</th>
+                    </tr>
+                  </thead>
+                  <tbody id="students-list">
+                    <!-- Students will be populated here by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Submit Attendance</button>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const departmentSelect = document.getElementById('department');
+  const semesterSelect = document.getElementById('semester');
+  const subjectSelect = document.getElementById('subject');
+  const attendanceDate = document.getElementById('attendance_date');
+  const studentsContainer = document.getElementById('students-container');
+  const studentsList = document.getElementById('students-list');
+  const formSubjectId = document.getElementById('form-subject-id');
+  const formSemesterId = document.getElementById('form-semester-id');
+  const formAttendanceDate = document.getElementById('form-attendance-date');
+
+  let currentDepartment = null;
+  let currentSemester = null;
+
+  // Fetch subjects when department or semester changes
+  [departmentSelect, semesterSelect].forEach(select => {
+    select.addEventListener('change', function() {
+      currentDepartment = departmentSelect.value;
+      currentSemester = semesterSelect.value;
+
+      if (currentDepartment && currentSemester) {
+        fetchSubjects(currentDepartment, currentSemester);
+        fetchStudents(currentDepartment, currentSemester);
+      } else {
+        subjectSelect.disabled = true;
+        subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+        studentsContainer.classList.add('d-none');
+      }
+    });
+  });
+
+  // Enable subject selection when a subject is chosen
+  subjectSelect.addEventListener('change', function() {
+    if (this.value) {
+      studentsContainer.classList.remove('d-none');
+      formSubjectId.value = this.value;
+      formSemesterId.value = currentSemester;
+      formAttendanceDate.value = attendanceDate.value;
+    } else {
+      studentsContainer.classList.add('d-none');
+    }
+  });
+
+  // Update form date when changed
+  attendanceDate.addEventListener('change', function() {
+    formAttendanceDate.value = this.value;
+  });
+
+  // Fetch subjects from API
+  function fetchSubjects(departmentId, semesterId) {
+    fetch(`/api/subjects?department_id=${departmentId}&semester_id=${semesterId}`)
+      .then(response => response.json())
+      .then(data => {
+        subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+        data.forEach(subject => {
+          const option = document.createElement('option');
+          option.value = subject.id;
+          option.textContent = subject.name;
+          subjectSelect.appendChild(option);
+        });
+        subjectSelect.disabled = false;
+      });
+  }
+
+  // Fetch students from API
+  function fetchStudents(departmentId, semesterId) {
+    fetch(`/api/students?department_id=${departmentId}&semester_id=${semesterId}`)
+      .then(response => response.json())
+      .then(data => {
+        studentsList.innerHTML = '';
+
+        data.forEach((student, index) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>
+              <input type="hidden" name="attendance[students_attributes][${index}][id]" value="${student.id}">
+              <input type="hidden" name="attendance[students_attributes][${index}][present]" value="0">
+              <input type="checkbox"
+                    name="attendance[students_attributes][${index}][present]"
+                    value="1"
+                    checked
+                    class="form-check-input"
+                    onchange="this.previousElementSibling.value=this.checked?'1':'0'">
+            </td>
+            <td>${student.roll_number}</td>
+            <td>${student.name}</td>
+          `;
+          studentsList.appendChild(row);
+        });
+      });
+  }
+});
+</script>

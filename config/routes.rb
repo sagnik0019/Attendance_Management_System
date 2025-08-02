@@ -18,5 +18,17 @@ Rails.application.routes.draw do
   resources :subjects
   resources :students
 
+  namespace :api do
+    get :subjects, to: "subjects#index"
+    get :students, to: "students#index"
+  end
+
+  resources :attendances, only: [] do
+    collection do
+      get :bulk_new
+      post :bulk_create
+    end
+  end
+
   root "home#index"
 end

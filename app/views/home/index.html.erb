@@ -12,9 +12,13 @@
 <br>
 <br>
 
+<% if teacher_signed_in? %>
+  <%= link_to "New Attendance", bulk_new_attendances_path, class: "btn btn-danger", data: { turbo: false } %>
+  <br>
+<% end %>
 
 <% if teacher_signed_in? && current_teacher.admin? %>
-  <%= link_to "Departments", departments_path, class: "btn btn-primary" %>
+  <%= link_to "Departments", departments_path, class: "btn btn-primary mt-2" %>
   <br>
   <%= link_to "Semesters", semesters_path, class: "btn btn-primary mt-2" %>
   <br>
