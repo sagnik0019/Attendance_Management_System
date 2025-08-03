@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     get :subjects, to: "subjects#index"
     get :students, to: "students#index"
     get :attendances, to: "attendances#index"
+    get :existing_attendance, to: "attendances#existing_attendance"
   end
 
   resources :attendances, only: [] do

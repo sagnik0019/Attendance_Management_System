@@ -90,6 +90,12 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentDepartment = null;
   let currentSemester = null;
 
+  // Add spinner element
+  const spinner = document.createElement('div');
+  spinner.className = 'spinner-border text-primary';
+  spinner.role = 'status';
+  spinner.innerHTML = '<span class="visually-hidden">Loading...</span>';
+
   // Fetch subjects when department or semester changes
   [departmentSelect, semesterSelect].forEach(select => {
     select.addEventListener('change', function() {
@@ -165,6 +171,38 @@ document.addEventListener('DOMContentLoaded', function() {
           `;
           studentsList.appendChild(row);
         });
+      });
+  }
+
+  [subjectSelect, attendanceDate].forEach(element => {
+    element.addEventListener('change', function() {
+      if (subjectSelect.value && attendanceDate.value) {
+        fetchExistingAttendance();
+      }
+    });
+  });
+
+  // Fetch existing attendance records
+  function fetchExistingAttendance() {
+    if (!subjectSelect.value || !attendanceDate.value) return;
+
+    studentsList.parentNode.appendChild(spinner);
+
+    fetch(`/api/existing_attendance?subject_id=${subjectSelect.value}&date=${attendanceDate.value}`)
+      .then(response => response.json())
+      .then(data => {
+        // Update checkboxes based on existing attendance
+        document.querySelectorAll('[name^="attendance[students_attributes]"]').forEach(checkbox => {
+          if (checkbox.type === 'checkbox') {
+            const studentId = checkbox.closest('tr').querySelector('[name$="[id]"]').value;
+            const existingRecord = data.find(record => record.student_id == studentId);
+            checkbox.checked = existingRecord ? existingRecord.present : true;
+            checkbox.previousElementSibling.value = checkbox.checked ? '1' : '0';
+          }
+        });
+      })
+      .finally(() => {
+        spinner.remove();
       });
   }
 });
