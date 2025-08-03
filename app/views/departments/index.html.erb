@@ -20,9 +20,9 @@
             <td><%= department.code %></td>
             <td>
               <div class="btn-group" role="group">
-                <%= button_to "Show", department, class: "btn btn-sm btn-outline-primary me-1" %>
-                <%= button_to "Edit", edit_department_path(department), class: "btn btn-sm btn-outline-secondary me-1" %>
-                <%= button_to "Destroy", department, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger me-1" %>
+                <%= link_to "Show", department, class: "btn btn-sm btn-outline-primary" %>
+                <%= link_to "Edit", edit_department_path(department), class: "btn btn-sm btn-outline-secondary" %>
+                <%= link_to "Destroy", department, data: { turbo_confirm: "Are you sure?", turbo_method: :delete }, class: "btn btn-sm btn-outline-danger" %>
               </div>
             </td>
           </tr>

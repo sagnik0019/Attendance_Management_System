@@ -24,9 +24,9 @@
             <td><%= subject.semester.name %></td>
             <td>
               <div class="btn-group" role="group">
-                <%= button_to "Show", subject, class: "btn btn-sm btn-outline-primary" %>
-                <%= button_to "Edit", edit_subject_path(subject), class: "btn btn-sm btn-outline-secondary" %>
-                <%= button_to "Destroy", subject, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
+                <%= link_to "Show", subject, class: "btn btn-sm btn-outline-primary" %>
+                <%= link_to "Edit", edit_subject_path(subject), class: "btn btn-sm btn-outline-secondary" %>
+                <%= link_to "Destroy", subject, data: { turbo_confirm: "Are you sure?", turbo_method: :delete }, class: "btn btn-sm btn-outline-danger" %>
               </div>
             </td>
           </tr>
