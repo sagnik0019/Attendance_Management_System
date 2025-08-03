@@ -1,6 +1,11 @@
 # app/controllers/attendances_controller.rb
 class AttendancesController < ApplicationController
-  before_action :authenticate_teacher!
+  before_action :authenticate_teacher!, only: [:bulk_new, :bulk_create]
+  before_action :authenticate_student!, only: [:bulk_show]
+
+  def bulk_show
+    @subjects = Subject.where(department_id: current_student.department_id, semester_id: current_student.semester_id)
+  end
 
   def bulk_new
     @departments = Department.all

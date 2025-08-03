@@ -26,3 +26,7 @@
   <br>
   <%= link_to "Students", students_path, class: "btn btn-primary mt-2" %>
 <% end %>
+
+<% if student_signed_in? %>
+  <%= link_to "My Attendance", bulk_show_attendances_path, class: "btn btn-primary mt-2", data: { turbo: false } %>
+<% end %>

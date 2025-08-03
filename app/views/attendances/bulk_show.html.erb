@@ -1,0 +1,90 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h2 class="mb-0">My Attendance Records</h2>
+        </div>
+
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <label for="subject" class="form-label">Select Subject</label>
+              <select id="subject" class="form-select">
+                <option value="">Select Subject</option>
+                <% @subjects.each do |subject| %>
+                  <option value="<%= subject.id %>"><%= subject.name %></option>
+                <% end %>
+              </select>
+            </div>
+          </div>
+
+          <div id="attendance-records" class="d-none">
+            <h5>Attendance Details</h5>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="records-list">
+                  <!-- Attendance records will be populated here by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const subjectSelect = document.getElementById('subject');
+  const attendanceRecords = document.getElementById('attendance-records');
+  const recordsList = document.getElementById('records-list');
+
+  subjectSelect.addEventListener('change', function() {
+    const subjectId = this.value;
+
+    if (subjectId) {
+      fetchAttendanceRecords(subjectId);
+      attendanceRecords.classList.remove('d-none');
+    } else {
+      attendanceRecords.classList.add('d-none');
+      recordsList.innerHTML = '';
+    }
+  });
+
+  function fetchAttendanceRecords(subjectId) {
+    fetch(`/api/attendances?subject_id=${subjectId}`)
+      .then(response => response.json())
+      .then(data => {
+        recordsList.innerHTML = '';
+
+        // Combine and sort all dates
+        const allDates = [...data.present_dates, ...data.absent_dates].sort(
+          (a, b) => new Date(b) - new Date(a)
+        );
+
+        // Create table rows
+        allDates.forEach(date => {
+          const isPresent = data.present_dates.includes(date);
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${new Date(date).toLocaleDateString()}</td>
+            <td>
+              <span class="badge bg-${isPresent ? 'success' : 'danger'}">
+                ${isPresent ? 'Present' : 'Absent'}
+              </span>
+            </td>
+          `;
+          recordsList.appendChild(row);
+        });
+      });
+  }
+});
+</script>
