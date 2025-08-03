@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_02_153302) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_03_035935) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,7 +32,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_153302) do
 
   create_table "departments", force: :cascade do |t|
     t.string "name", limit: 255, null: false
-    t.string "code", limit: 2, null: false
+    t.string "code", limit: 3, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -63,7 +63,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_153302) do
 
   create_table "subjects", force: :cascade do |t|
     t.string "name", limit: 255, null: false
-    t.string "code", limit: 3, null: false
+    t.string "code", limit: 6, null: false
     t.bigint "semester_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -85,10 +85,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_153302) do
     t.index ["reset_password_token"], name: "index_teachers_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "attendances", "semesters", on_delete: :nullify
-  add_foreign_key "attendances", "students", on_delete: :nullify
-  add_foreign_key "attendances", "subjects", on_delete: :nullify
-  add_foreign_key "attendances", "teachers", on_delete: :nullify
+  add_foreign_key "attendances", "semesters", on_delete: :cascade
+  add_foreign_key "attendances", "students", on_delete: :cascade
+  add_foreign_key "attendances", "subjects", on_delete: :cascade
+  add_foreign_key "attendances", "teachers", on_delete: :cascade
   add_foreign_key "students", "departments", on_delete: :cascade
   add_foreign_key "students", "semesters", on_delete: :cascade
   add_foreign_key "subjects", "departments", on_delete: :cascade
