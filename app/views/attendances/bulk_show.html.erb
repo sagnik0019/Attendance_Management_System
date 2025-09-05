@@ -34,6 +34,28 @@
                 </tbody>
               </table>
             </div>
+
+            <!-- Attendance Summary Section -->
+            <div id="attendance-summary" class="mt-4 p-3 bg-light rounded">
+              <h5>Attendance Summary</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Total Classes:</strong> <span id="total-classes">0</span></p>
+                  <p><strong>Present:</strong> <span id="present-count">0</span></p>
+                  <p><strong>Absent:</strong> <span id="absent-count">0</span></p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>Attendance Percentage:</strong></p>
+                  <div id="percentage-display" class="d-flex align-items-center">
+                    <div class="progress flex-grow-1 me-3" style="height: 20px;">
+                      <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;"
+                           aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <span id="percentage-text" class="fw-bold fs-5">0%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -46,6 +68,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const subjectSelect = document.getElementById('subject');
   const attendanceRecords = document.getElementById('attendance-records');
   const recordsList = document.getElementById('records-list');
+  const totalClassesSpan = document.getElementById('total-classes');
+  const presentCountSpan = document.getElementById('present-count');
+  const absentCountSpan = document.getElementById('absent-count');
+  const progressBar = document.getElementById('progress-bar');
+  const percentageText = document.getElementById('percentage-text');
 
   subjectSelect.addEventListener('change', function() {
     const subjectId = this.value;
@@ -56,19 +83,49 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       attendanceRecords.classList.add('d-none');
       recordsList.innerHTML = '';
+      resetSummary();
     }
   });
+
+  function resetSummary() {
+    totalClassesSpan.textContent = '0';
+    presentCountSpan.textContent = '0';
+    absentCountSpan.textContent = '0';
+    progressBar.style.width = '0%';
+    progressBar.setAttribute('aria-valuenow', '0');
+    progressBar.className = 'progress-bar';
+    percentageText.textContent = '0%';
+  }
 
   function fetchAttendanceRecords(subjectId) {
     fetch(`/api/attendances?subject_id=${subjectId}`)
       .then(response => response.json())
       .then(data => {
         recordsList.innerHTML = '';
+        resetSummary();
 
         // Combine and sort all dates
         const allDates = [...data.present_dates, ...data.absent_dates].sort(
           (a, b) => new Date(b) - new Date(a)
         );
+
+        // Calculate attendance statistics
+        const totalClasses = allDates.length;
+        const presentCount = data.present_dates.length;
+        const absentCount = data.absent_dates.length;
+        const percentage = totalClasses > 0 ? Math.round((presentCount / totalClasses) * 100) : 0;
+
+        // Update summary
+        totalClassesSpan.textContent = totalClasses;
+        presentCountSpan.textContent = presentCount;
+        absentCountSpan.textContent = absentCount;
+
+        // Update progress bar and percentage
+        progressBar.style.width = `${percentage}%`;
+        progressBar.setAttribute('aria-valuenow', percentage);
+        progressBar.className = `progress-bar ${percentage >= 75 ? 'bg-success' : 'bg-success'}`;
+        percentageText.textContent = `${percentage}%`;
+        percentageText.className = `fw-bold fs-5 ${percentage >= 75 ? 'text-success' : 'text-success'}`;
 
         // Create table rows
         allDates.forEach(date => {
@@ -84,6 +141,10 @@ document.addEventListener('DOMContentLoaded', function() {
           `;
           recordsList.appendChild(row);
         });
+      })
+      .catch(error => {
+        console.error('Error fetching attendance records:', error);
+        resetSummary();
       });
   }
 });

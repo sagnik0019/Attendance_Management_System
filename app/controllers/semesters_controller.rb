@@ -1,6 +1,6 @@
 class SemestersController < ApplicationController
-  before_action :authenticate_teacher!
-  before_action :render_404_unless_teacher_is_admin
+  before_action :authenticate_admin!
+
 
   def index
     @semesters = Semester.all

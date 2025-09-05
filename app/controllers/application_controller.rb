@@ -13,4 +13,6 @@ class ApplicationController < ActionController::Base
 
     render file: "#{Rails.root}/public/404.html", status: :unauthorized
   end
+
+  
 end

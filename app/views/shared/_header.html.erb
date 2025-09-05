@@ -15,11 +15,18 @@
             Authentication
           </a>
           <ul class="dropdown-menu p-2" aria-labelledby="navbarDropdown">
+
             <% if teacher_signed_in? %>
               <li><%= current_teacher.email %></li>
               <li><hr class="dropdown-divider"></li>
               <li>
                 <%= button_to "Sign Out", destroy_teacher_session_path, class: 'dropdown-item', method: :delete %>
+              </li>
+            <% elsif admin_signed_in? %>
+              <li><%= current_admin&.email %></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <%= button_to "Sign Out", destroy_admin_session_path, class: 'dropdown-item', method: :delete %>
               </li>
             <% elsif student_signed_in? %>
               <li><%= current_student.email %></li>
@@ -28,6 +35,7 @@
                 <%= button_to "Sign Out", destroy_teacher_session_path, class: 'dropdown-item', method: :delete %>
               </li>
             <% else %>
+              <li><%= link_to "Admin Sign In", new_admin_session_path, class: 'dropdown-item' %><li>
               <li><%= link_to "Teacher Sign In", new_teacher_session_path, class: 'dropdown-item' %><li>
               <li><%= link_to "Student Sign In", new_student_session_path, class: 'dropdown-item' %><li>
             <% end %>

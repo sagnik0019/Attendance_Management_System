@@ -7,5 +7,5 @@ class Teacher < ApplicationRecord
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true, uniqueness: true
   validates :name, presence: true
 
-  enum :role, { default: 0, admin: 1 }
+
 end

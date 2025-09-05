@@ -1,30 +1,39 @@
+
 <% if teacher_signed_in? %>
   <h1>Welcome teacher <%= current_teacher.email %></h1>
 <% elsif student_signed_in? %>
   <h1>Welcome student <%= current_student.email %></h1>
+<% elsif admin_signed_in? %>
+  <h1>Welcome administrator <%= current_admin.email %></h1>
 <% else %>
-  <h1>Welcome to the home page</h1>
+<h1>Welcome to the home page</h1>
 <% end %>
-
-
-
 <br>
 <br>
 <br>
+
+
 
 <% if teacher_signed_in? %>
   <%= link_to "New Attendance", bulk_new_attendances_path, class: "btn btn-danger", data: { turbo: false } %>
   <br>
+  <%= link_to "View Attendance",bulk_view_attendances_path,class:"btn btn-primary mt-2",data:{turbo:false} %>
+  <br>
 <% end %>
 
-<% if teacher_signed_in? && current_teacher.admin? %>
-  <%= link_to "Departments", departments_path, class: "btn btn-primary mt-2" %>
+
+
+<% if admin_signed_in? %>
+  <%= link_to "Departments", departments_path, class: "btn btn-primary mt-2", data: { turbo: false }%>
   <br>
-  <%= link_to "Semesters", semesters_path, class: "btn btn-primary mt-2" %>
+  <%= link_to "Semesters", semesters_path, class: "btn btn-primary mt-2",data: { turbo: false } %>
   <br>
-  <%= link_to "Subjects", subjects_path, class: "btn btn-primary mt-2" %>
+  <%= link_to "Subjects", subjects_path, class: "btn btn-primary mt-2",data: { turbo: false } %>
   <br>
-  <%= link_to "Students", students_path, class: "btn btn-primary mt-2" %>
+  <%= link_to "Students", students_path, class: "btn btn-primary mt-2",data: { turbo: false } %>
+  <br>
+  <%= link_to "Teachers",teachers_path, class: "btn btn-primary mt-2",data: { turbo: false } %>
+  <br>
 <% end %>
 
 <% if student_signed_in? %>

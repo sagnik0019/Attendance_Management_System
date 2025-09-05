@@ -1,7 +1,7 @@
 # app/controllers/students_controller.rb
 class StudentsController < ApplicationController
-  before_action :authenticate_teacher!
-  before_action :render_404_unless_teacher_is_admin
+  before_action :authenticate_admin!
+
 
   before_action :set_student, only: [:show, :edit, :update, :destroy]
   before_action :load_departments_and_semesters, only: [:new, :edit, :create, :update]
@@ -42,6 +42,8 @@ class StudentsController < ApplicationController
     @student.destroy
     redirect_to students_url, notice: 'Student was successfully destroyed.'
   end
+
+
 
   private
 

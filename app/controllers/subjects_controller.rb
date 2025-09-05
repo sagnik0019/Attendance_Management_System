@@ -1,7 +1,7 @@
 # app/controllers/subjects_controller.rb
 class SubjectsController < ApplicationController
-  before_action :authenticate_teacher!
-  before_action :render_404_unless_teacher_is_admin
+  before_action :authenticate_admin!
+
 
   before_action :set_subject, only: [:show, :edit, :update, :destroy]
   before_action :load_departments_and_semesters, only: [:new, :edit, :create, :update]

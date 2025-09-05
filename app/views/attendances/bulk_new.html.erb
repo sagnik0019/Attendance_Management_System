@@ -113,6 +113,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // Enable subject selection when a subject is chosen
   subjectSelect.addEventListener('change', function() {
     if (this.value) {
@@ -161,8 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <input type="hidden" name="attendance[students_attributes][${index}][present]" value="0">
               <input type="checkbox"
                     name="attendance[students_attributes][${index}][present]"
-                    value="1"
-                    checked
+                    value="0"
                     class="form-check-input"
                     onchange="this.previousElementSibling.value=this.checked?'1':'0'">
             </td>
@@ -196,8 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
           if (checkbox.type === 'checkbox') {
             const studentId = checkbox.closest('tr').querySelector('[name$="[id]"]').value;
             const existingRecord = data.find(record => record.student_id == studentId);
-            checkbox.checked = existingRecord ? existingRecord.present : true;
-            checkbox.previousElementSibling.value = checkbox.checked ? '1' : '0';
+            checkbox.checked = existingRecord ? existingRecord.present : false;
+            checkbox.previousElementSibling.value = checkbox.checked ? '0' : '1';
           }
         });
       })

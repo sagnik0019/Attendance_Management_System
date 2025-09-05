@@ -2,7 +2,7 @@
 puts "🌱 Seeding data..."
 
 # Clear existing data
-[Department, Semester, Subject, Teacher, Student, Attendance].each(&:destroy_all)
+[Attendance, Student, Teacher, Admin, Subject, Semester, Department].each(&:destroy_all)
 
 # Helper method to create dates
 def random_date_within_semester(start_date, end_date)
@@ -68,23 +68,25 @@ subjects_data.each do |dept_code, sem_data|
 end
 puts "✅ Subjects created"
 
-# 4. Create Teachers
+# 4. Create Admin
+admins = [
+  {  email: "rajesh.kumar@college.edu", password: "123456", password_confirmation: "123456" }
+]
+
+admins.each { |admin| Admin.create!(admin) }
+puts "✅ Admin created"
+
+# 5. Create Teachers
 teachers = [
-  { name: "Dr. Rajesh Kumar", email: "rajesh.kumar@college.edu", password: "123456", password_confirmation: "123456" },
   { name: "Prof. Sunita Sharma", email: "sunita.sharma@college.edu", password: "123456", password_confirmation: "123456" },
   { name: "Dr. Amit Patel", email: "amit.patel@college.edu", password: "123456", password_confirmation: "123456" },
   { name: "Prof. Priya Singh", email: "priya.singh@college.edu", password: "123456", password_confirmation: "123456" }
 ]
 
 teachers.each { |teacher| Teacher.create!(teacher) }
-Teacher.first.update(role: "admin")
 puts "✅ Teachers created"
 
-# 5. Create Students
-cs_department = Department.find_by(code: "CS")
-ec_department = Department.find_by(code: "EC")
-
-# 5. Create Students with 10-digit unique roll numbers
+# 6. Create Students with 10-digit unique roll numbers
 used_roll_numbers = Set.new
 
 # Generate unique 10-digit roll number
@@ -98,9 +100,12 @@ def generate_roll_number(used_numbers)
   end
 end
 
+cs_department = Department.find_by(code: "CS")
+ec_department = Department.find_by(code: "EC")
+current_semester = Semester.find_by(name: "5th Semester")
+
 # Create CS students
 20.times do |i|
-  semester = Semester.find_by(name: "5th Semester")
   Student.create!(
     name: ["Aarav", "Diya", "Vihaan", "Ananya", "Reyansh", "Saanvi", "Arjun", "Ishaan", "Myra", "Advait"].sample + " " +
            ["Sharma", "Patel", "Singh", "Kumar", "Verma", "Gupta", "Joshi", "Malhotra", "Reddy", "Nair"].sample,
@@ -109,13 +114,12 @@ end
     password_confirmation: "123456",
     roll_number: generate_roll_number(used_roll_numbers),
     department: cs_department,
-    semester: semester
+    semester: current_semester
   )
 end
 
 # Create EC students
 20.times do |i|
-  semester = Semester.find_by(name: "5th Semester")
   Student.create!(
     name: ["Krish", "Anika", "Dhruv", "Kiara", "Atharv", "Pari", "Kabir", "Aanya", "Vivaan", "Tara"].sample + " " +
            ["Mehta", "Choudhary", "Bose", "Banerjee", "Chatterjee", "Das", "Sen", "Mukherjee", "Dutta", "Ghosh"].sample,
@@ -124,15 +128,14 @@ end
     password_confirmation: "123456",
     roll_number: generate_roll_number(used_roll_numbers),
     department: ec_department,
-    semester: semester
+    semester: current_semester
   )
 end
 puts "✅ Students created"
 
-# 6. Create Sample Attendance Records
+# 7. Create Sample Attendance Records
 puts "⏳ Creating attendance records (this may take a moment)..."
 
-current_semester = Semester.find_by(name: "5th Semester")
 cs_subjects = Subject.joins(:department).where(departments: { code: "CS" }, semester: current_semester)
 ec_subjects = Subject.joins(:department).where(departments: { code: "EC" }, semester: current_semester)
 
