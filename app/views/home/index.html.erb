@@ -4,7 +4,7 @@
 <% elsif student_signed_in? %>
   <h1>Welcome student <%= current_student.name %></h1>
 <% elsif admin_signed_in? %>
-  <h1>Welcome administrator <%= current_admin.name %></h1>
+  <h1>Welcome administrator <%= current_admin.email%></h1>
 <% else %>
 <h1>Welcome to the home page</h1>
 <% end %>
