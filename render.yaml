@@ -5,6 +5,7 @@ services:
     plan: free
     buildCommand: './bin/render-build.sh'
     startCommand: './bin/rails server'
+    postDeployCommand: bundle exec rails db:migrate
     envVars:
       - key: DATABASE_URL
         fromDatabase:
